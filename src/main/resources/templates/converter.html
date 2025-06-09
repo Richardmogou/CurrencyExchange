@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - User Management</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" th:href="@{/css/login.css}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .result-box {
+      width: 100%;
+      max-width: 600px;
+      background-color: #E8F8FD;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .exchange-icon {
+      font-size: 24px;
+      margin-top: 30px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- Header Section -->
+  <div class="header">
+    <div class="logo-section">
+      <img th:src="@{/images/logo.png}" alt="Logo" class="logo">
+      <div class="text-section">
+        <h1>Currency-Exchange</h1>
+        <p>richardmogou99@gmail.com</p>
+      </div>
+    </div>
+    <div class="auth-links">
+      <a th:href="@{/}">Home</a>
+    </div>
+  </div>
+
+
+
+
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+              <h3 class="mb-0">Convertisseur de Devises</h3>
+            </div>
+            <div class="card-body">
+              <form th:action="@{/convert}" method="post" th:object="${conversionRequest}">
+                <div class="row">
+                  <div class="col-md-5">
+                    <div class="mb-3">
+                      <label for="fromCurrency" class="form-label">De</label>
+                      <select class="form-select" id="fromCurrency" th:field="*{fromCurrency}" required>
+                        <option value="">Sélectionner une devise</option>
+                        <option th:each="currency : ${currencies}" th:value="${currency}" th:text="${currency}"></option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="amount" class="form-label">Montant</label>
+                      <input type="number" class="form-control" id="amount" th:field="*{amount}" step="0.01" min="0.01" required>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="exchange-icon">
+                      <i class="bi bi-arrow-left-right">⇄</i>
+                    </div>
+                  </div>
+                  <div class="col-md-5">
+                    <div class="mb-3">
+                      <label for="toCurrency" class="form-label">Vers</label>
+                      <select class="form-select" id="toCurrency" th:field="*{toCurrency}" required>
+                        <option value="">Sélectionner une devise</option>
+                        <option th:each="currency : ${currencies}" th:value="${currency}" th:text="${currency}"></option>
+                      </select>
+                    </div>
+                    <div class="mb-3 mt-4 pt-2">
+                      <button type="submit" class="btn btn-primary w-100">Convertir</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+              <div th:if="${error}" class="alert alert-danger mt-4" role="alert">
+                <strong>Erreur:</strong> <span th:text="${error}"></span>
+              </div>
+
+              <div th:if="${result}" class="result-box">
+                <h4 class="mb-3">Résultat de la conversion</h4>
+                <div class="row">
+                  <div class="col-md-6">
+                    <p><strong>Montant initial:</strong> <span th:text="${result.originalAmount}"></span> <span th:text="${result.fromCurrency}"></span></p>
+                  </div>
+                  <div class="col-md-6">
+                    <p><strong>Montant converti:</strong> <span th:text="${result.convertedAmount}"></span> <span th:text="${result.toCurrency}"></span></p>
+                  </div>
+                </div>
+                <p><strong>Taux de change:</strong> 1 <span th:text="${result.fromCurrency}"></span> = <span th:text="${result.exchangeRate}"></span> <span th:text="${result.toCurrency}"></span></p>
+              </div>
+            </div>
+            <div class="card-footer text-muted">
+              <div class="d-flex justify-content-between">
+                <span>Taux de change mis à jour régulièrement</span>
+                <a href="/swagger-ui.html" target="_blank">API Documentation</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+  <!-- Include the footer -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </div>
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
